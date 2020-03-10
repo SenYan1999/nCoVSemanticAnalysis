@@ -29,7 +29,7 @@ parser.add_argument('--lr', type=float, default=2e-5)
 
 # save & log
 parser.add_argument('--log_file', type=str, default='log/log.log')
-parser.add_argument('--save_path', type=str, default='save_model/model.pt')
+parser.add_argument('--save_path', type=str, default='save_model/')
 
 # parse args
 args = parser.parse_args()
