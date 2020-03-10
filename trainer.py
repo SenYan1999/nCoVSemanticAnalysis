@@ -19,7 +19,25 @@ class Trainer:
     def calculate_result(self, pred, truth):
         pred = torch.argmax(pred, dim=-1)
         acc = (pred == truth).sum().item() / truth.shape[0]
-        return 0, 0, 0, acc
+
+        def calcu(string_p, string_t):
+            if len(torch.where(eval(string_p))[0]) == 0 or len(torch.where(eval(string_t))[0]) == 0:
+                return 0
+            records_array = torch.cat([torch.where(eval(string_p))[0], torch.where(eval(string_t))[0]], dim=0).numpy()
+            vals, inverse, count = np.unique(records_array, return_inverse=True,
+                                             return_counts=True)
+            return (len(np.where(count > 1)[0]))
+
+        def CALCU(cate):  # int
+            TP = calcu('pred==' + str(cate), 'truth==' + str(cate))
+            FP = calcu('pred==' + str(cate), 'truth!=' + str(cate))
+            TN = calcu('pred!=' + str(cate), 'truth!=' + str(cate))
+            FN = calcu('pred!=' + str(cate), 'truth==' + str(cate))
+            return np.array((TP / (TP + FP), TP / (TP + FN), 2 * TP / (2 * TP + FN + FP)))
+
+        p, r, f1 = tuple(CALCU(1) + CALCU(2) + CALCU(0)/3)
+
+        return p, r, f1, acc
 
     def train_epoch(self, epoch):
         logger.info('Epoch: %2d: Training Model...' % epoch)
@@ -43,7 +61,7 @@ class Trainer:
             f1s.append(f1)
             accs.append(acc)
 
-            pbar.set_description('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f' % (epoch, loss.item(), f1, acc))
+            pbar.set_description('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f' % (epoch, np.mean(losses), np.means(f1s), np.mean(accs)))
             pbar.update(1)
         pbar.close()
         logger.info('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f | PRECISION: %1.3f | RECALL: %1.3f' %
