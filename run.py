@@ -31,5 +31,7 @@ def train():
 if __name__ == "__main__":
     if args.preprocess:
         preprocess()
-    preprocess()
-    train()
+    elif args.train:
+        train()
+    else:
+        print('Please choose a running mode.')
