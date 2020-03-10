@@ -20,7 +20,7 @@ class Trainer:
         pred = torch.argmax(pred, dim=-1)
         acc = (pred == truth).sum().item() / truth.shape[0]
 
-        def calcu(string_p, string_t):
+        def calcu(string_p, string_t, pred, truth):
             if len(torch.where(eval(string_p))[0]) == 0 or len(torch.where(eval(string_t))[0]) == 0:
                 return 0
             records_array = torch.cat([torch.where(eval(string_p))[0], torch.where(eval(string_t))[0]], dim=0).numpy()
@@ -28,14 +28,14 @@ class Trainer:
                                              return_counts=True)
             return (len(np.where(count > 1)[0]))
 
-        def CALCU(cate):  # int
-            TP = calcu('pred==' + str(cate), 'truth==' + str(cate))
-            FP = calcu('pred==' + str(cate), 'truth!=' + str(cate))
-            TN = calcu('pred!=' + str(cate), 'truth!=' + str(cate))
-            FN = calcu('pred!=' + str(cate), 'truth==' + str(cate))
+        def CALCU(cate, pred, truth):  # int
+            TP = calcu('pred==' + str(cate), 'truth==' + str(cate), pred, truth)
+            FP = calcu('pred==' + str(cate), 'truth!=' + str(cate), pred, truth)
+            TN = calcu('pred!=' + str(cate), 'truth!=' + str(cate), pred, truth)
+            FN = calcu('pred!=' + str(cate), 'truth==' + str(cate), pred, truth)
             return np.array((TP / (TP + FP), TP / (TP + FN), 2 * TP / (2 * TP + FN + FP)))
 
-        p, r, f1 = tuple(CALCU(1) + CALCU(2) + CALCU(0)/3)
+        p, r, f1 = tuple(CALCU(1, pred, truth) + CALCU(2, pred, truth) + CALCU(0, pred, truth)/3)
 
         return p, r, f1, acc
 
