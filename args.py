@@ -23,7 +23,7 @@ parser.add_argument('--drop_out', type=float, default=0.2)
 
 # train
 parser.add_argument('--eval_rate', type=float, default=0.2)
-parser.add_argument('--batch_size', type=int, default=16)
+parser.add_argument('--batch_size', type=int, default=32)
 parser.add_argument('--num_epoch', type=int, default=16)
 parser.add_argument('--lr', type=float, default=2e-5)
 

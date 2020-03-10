@@ -57,7 +57,7 @@ class BaseDataset(Dataset):
                     count += 1
                     continue
 
-                data.append(idx, sent, label)
+                data.append((idx, sent, label))
         
         logger.info('Preprocess: %d | Ignore: %d' % (len(data), count))
 
