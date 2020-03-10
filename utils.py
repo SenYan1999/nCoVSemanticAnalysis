@@ -53,6 +53,7 @@ class BaseDataset(Dataset):
                     idx, sent, label = int(line[0]), line[3], int(line[6]) + 1
                 except:
                     count += 1
+                    continue
                 if label not in [0, 1, 2]:
                     count += 1
                     continue
