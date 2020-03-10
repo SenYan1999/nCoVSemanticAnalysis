@@ -49,11 +49,15 @@ class BaseDataset(Dataset):
             reader = csv.reader(f)
             next(reader) # skip the first head line
             for line in reader:
-                idx, sent, label = line[0], line[3], line[6]
                 try:
-                    data.append((int(idx), sent, int(label) + 1))
+                    idx, sent, label = int(line[0]), line[3], int(line[6]) + 1
                 except:
                     count += 1
+                if label not in [0, 1, 2]:
+                    count += 1
+                    continue
+
+                data.append(idx, sent, label)
         
         logger.info('Preprocess: %d | Ignore: %d' % (len(data), count))
 
