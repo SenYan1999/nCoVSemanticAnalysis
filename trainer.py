@@ -17,7 +17,7 @@ class Trainer:
         self.model.to(self.device)
 
     def calculate_result(self, pred, truth):
-        pred = torch.argmax(pred, dim=-1).cpu
+        pred = torch.argmax(pred, dim=-1).cpu()
         truth = truth.cpu()
         acc = (pred == truth).sum().item() / truth.shape[0]
 
