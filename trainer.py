@@ -34,9 +34,14 @@ class Trainer:
             FP = calcu('pred==' + str(cate), 'truth!=' + str(cate), pred, truth)
             TN = calcu('pred!=' + str(cate), 'truth!=' + str(cate), pred, truth)
             FN = calcu('pred!=' + str(cate), 'truth==' + str(cate), pred, truth)
-            return np.array((TP / (TP + FP), TP / (TP + FN), 2 * TP / (2 * TP + FN + FP)))
+            precision = 1 if TP + FP == 0 else TP / (TP + FP)
+            recall = 1 if TP + FN == 0 else TP / (TP + FN)
+            f1 = 0 if precision + recall == 0 else 2 * precision * recall / (precision + recall)
+            if f1 > 1:
+                print(1)
+            return np.array((precision, recall, f1))
 
-        p, r, f1 = tuple(CALCU(1, pred, truth) + CALCU(2, pred, truth) + CALCU(0, pred, truth)/3)
+        p, r, f1 = tuple((CALCU(1, pred, truth) + CALCU(2, pred, truth) + CALCU(0, pred, truth))/3)
 
         return p, r, f1, acc
 
@@ -62,7 +67,7 @@ class Trainer:
             f1s.append(f1)
             accs.append(acc)
 
-            pbar.set_description('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f' % (epoch, np.mean(losses), np.means(f1s), np.mean(accs)))
+            pbar.set_description('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f' % (epoch, np.mean(losses), np.mean(f1s), np.mean(accs)))
             pbar.update(1)
         pbar.close()
         logger.info('Epoch: %2d | LOSS: %2.3f | F1: %1.3f | ACC: %1.3f | PRECISION: %1.3f | RECALL: %1.3f' %
