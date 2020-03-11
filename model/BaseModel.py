@@ -7,6 +7,7 @@ class BaseBertModel(nn.Module):
     def __init__(self, bert_type, d_bert, num_class):
         super(BaseBertModel, self).__init__()
         self.bert = BertModel.from_pretrained(bert_type)
+        # self.bert = BertModel.from_pretrained('./pretrained_bert/')
         self.classifier = nn.Linear(d_bert, num_class)
 
     def forward(self, x):
