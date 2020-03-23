@@ -49,5 +49,6 @@ def build_semantic_vocab(negative, neutral, positive):
 
 if __name__ == "__main__":
     out = read_file(args.raw_train_data)
-    build_semantic_vocab(*out)
+    result = build_semantic_vocab(*out)
+    # result = torch.load('tmp.pt')
 
